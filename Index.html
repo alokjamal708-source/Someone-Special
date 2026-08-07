@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>for My Favorite Person</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Caveat:wght@500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#221B2E;
+    --bg-deep2:#2E2440;
+    --paper:#F7EFE4;
+    --rose:#D98B96;
+    --gold:#CBA35C;
+    --text-light:#F3EAE0;
+    --text-ink:#34293F;
+    --text-ink-soft:#5c4f6b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    height:100%;
+    overflow:hidden; /* no scrolling — the screen itself moves instead */
+    background:var(--bg-deep);
+    color:var(--text-light);
+    font-family:'Inter', sans-serif;
+    font-weight:300;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+  }
+
+  .stage{
+    position:relative;
+    width:100%; height:100svh;
+    background:radial-gradient(ellipse at 50% 30%, var(--bg-deep2), var(--bg-deep) 75%);
+  }
+  .stars{
+    position:absolute; inset:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, rgba(243,234,224,0.6), transparent),
+      radial-gradient(1.5px 1.5px at 70% 15%, rgba(243,234,224,0.5), transparent),
+      radial-gradient(1px 1px at 85% 55%, rgba(203,163,92,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 40% 70%, rgba(243,234,224,0.5), transparent),
+      radial-gradient(1px 1px at 10% 80%, rgba(217,139,150,0.6), transparent),
+      radial-gradient(1.5px 1.5px at 60% 45%, rgba(243,234,224,0.4), transparent),
+      radial-gradient(1px 1px at 92% 85%, rgba(243,234,224,0.5), transparent);
+    background-repeat:repeat;
+    background-size:300px 300px;
+    animation:twinkle 6s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle{ from{opacity:.5;} to{opacity:1;} }
+
+  .drift{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:2rem;
+    animation:drift 10s ease-in-out infinite;
+  }
+  @keyframes drift{
+    0%,100%{ transform:translate(0,0); }
+    50%{ transform:translate(0,-14px); }
+  }
+
+  .slide{
+    position:absolute; inset:0;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 1.1s ease;
+  }
+  .slide.active{ opacity:1; pointer-events:auto; }
+
+  .eyebrow{
+    font-family:'Caveat', cursive;
+    font-size:1.4rem;
+    color:var(--rose);
+    margin-bottom:.5rem;
+  }
+  .slide h1, .slide h2{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    line-height:1.1;
+  }
+  .slide h1{ font-size:clamp(2.4rem, 8vw, 4.5rem); }
+  .slide h1 em{ font-style:italic; color:var(--rose); }
+  .slide h2{ font-size:clamp(1.6rem, 4.5vw, 2.4rem); margin:.6rem 0 .8rem; }
+  .slide .body-text{
+    max-width:38ch;
+    color:rgba(243,234,224,0.78);
+    line-height:1.6;
+    font-size:1rem;
+    margin-top:.5rem;
+  }
+
+  .polaroid-wrap{ perspective:1200px; margin-bottom:1.3rem; }
+  .polaroid{
+    width:190px; height:230px;
+    position:relative;
+    cursor:pointer;
+    transform-style:preserve-3d;
+    transition:transform .7s cubic-bezier(.4,.2,.2,1);
+  }
+  .polaroid.flipped{ transform:rotateY(180deg) !important; }
+  .polaroid-face{
+    position:absolute; inset:0;
+    backface-visibility:hidden;
+    background:var(--paper);
+    border-radius:2px;
+    box-shadow:0 14px 26px -8px rgba(0,0,0,0.5);
+    padding:10px 10px 34px;
+    display:flex; flex-direction:column;
+  }
+  .polaroid-photo{
+    flex:1; border-radius:1px;
+    /* PLACEHOLDER: swap for background:url('your-photo.jpg') center/cover; */
+    display:flex; align-items:center; justify-content:center;
+    color:rgba(255,255,255,0.85); font-size:1.6rem;
+  }
+  .polaroid-cap{
+    font-family:'Caveat', cursive; font-size:1.05rem;
+    color:var(--text-ink-soft); text-align:center; margin-top:6px;
+  }
+  .polaroid-back{ transform:rotateY(180deg); justify-content:center; align-items:center; }
+  .polaroid-back p{ font-family:'Caveat', cursive; font-size:1.2rem; color:var(--text-ink); line-height:1.4; }
+  .tape{
+    position:absolute; top:-12px; left:50%;
+    transform:translateX(-50%) rotate(-3deg);
+    width:60px; height:22px;
+    background:rgba(203,163,92,0.55);
+    border:1px solid rgba(203,163,92,0.3);
+    z-index:2;
+  }
+
+  .dots{
+    position:absolute;
+    bottom:1.8rem; left:50%; transform:translateX(-50%);
+    display:flex; gap:.5rem; z-index:5;
+  }
+  .dot{
+    width:7px; height:7px; border-radius:50%;
+    background:rgba(243,234,224,0.3);
+    cursor:pointer;
+    transition:background .3s ease, transform .3s ease;
+  }
+  .dot.active{ background:var(--gold); transform:scale(1.3); }
+
+  .nav-arrow{
+    position:absolute; top:50%; transform:translateY(-50%);
+    background:none; border:none; color:rgba(243,234,224,0.4);
+    font-size:1.6rem; cursor:pointer; z-index:5;
+    padding:1rem; transition:color .2s ease;
+  }
+  .nav-arrow:hover{ color:var(--text-light); }
+  .nav-prev{ left:.3rem; }
+  .nav-next{ right:.3rem; }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="stars"></div>
+
+  <div class="slide active" data-idx="0">
+    <div class="drift">
+      <div class="eyebrow">sudut kecil di internet, khusus buat kamu yang ku cinta!</div>
+      <h1>Atikah <em>&mdash; semua fotomu yang menjadi kenangan semata</em></h1>
+      <p class="body-text">Beberapa foto terakhir, aku simpan di sini biar bisa dibuka kapan aja pas kangen.</p>
+    </div>
+  </div>
+
+  <div class="slide" data-idx="1">
+    <div class="drift">
+      <div class="polaroid-wrap">
+        <div class="polaroid" onclick="event.stopPropagation(); this.classList.toggle('flipped')">
+          <div class="polaroid-face">
+            <div class="tape"></div>
+            <div class="polaroid-photo" style="background: url('IMG-20260318-WA0038.jpg') center/cover;"></div>
+            <div class="polaroid-cap">Foto paling lucu</div>
+          </div>
+          <div class="polaroid-face polaroid-back"><p>Lucuuu bangett&hellip;</p></div>
+        </div>
+      </div>
+      <div class="eyebrow">Cutest</div>
+      <h2>Waktu itu, pertama kali aku salting liat foto cewe</h2>
+      <p class="body-text">Gatau mau jelasin apa, tapi yang pasti kamu lucu banget .</p>
+    </div>
+  </div>
+
+  <div class="slide" data-idx="2">
+    <div class="drift">
+      <div class="polaroid-wrap">
+        <div class="polaroid" onclick="event.stopPropagation(); this.classList.toggle('flipped')">
+          <div class="polaroid-face">
+            <div class="tape"></div>
+            <div class="polaroid-photo" style="background: url('quality_restoration_20260401084454062.jpg')center/cover ;"></div>
+            <div class="polaroid-cap">Foto si cantik1</div>
+          </div>
+          <div class="polaroid-face polaroid-back"><p>Kok ada yah orang secantik kamuu&hellip;</p></div>
+        </div>
+      </div>
+      <div class="eyebrow">tempat baru untuk singgah</div>
+      <h2>Foto yang gabakal pernah hilang</h2>
+      <p class="body-text">Cantik banget, tapi sayang gabisa bersama.</p>
+    </div>
+  </div>
+
+  <div class="slide" data-idx="3">
+    <div class="drift">
+      <div class="polaroid-wrap">
+        <div class="polaroid" onclick="event.stopPropagation(); this.classList.toggle('flipped')">
+          <div class="polaroid-face">
+            <div class="tape"></div>
+            <div class="polaroid-photo" style="background:url('quality_restoration_20260329151731596.jpg') center/cover;"></div>
+            <div class="polaroid-cap">Foto si cantik2</div>
+          </div>
+          <div class="polaroid-face polaroid-back"><p>When yah ketemu lagi&hellip;</p></div>
+        </div>
+      </div>
+      <div class="eyebrow">Selalu ada kamu di hati aku</div>
+      <h2>Foto yang terlalu sering menjadi bahan tangisan</h2>
+      <p class="body-text">Kadang momen paling nyesek tuh, waktu nangisin dia yang padahal gamungkin balik lagi.</p>
+    </div>
+  </div>
+
+  <div class="slide" data-idx="4">
+    <div class="drift">
+      <div class="polaroid-wrap">
+        <div class="polaroid" onclick="event.stopPropagation(); this.classList.toggle('flipped')">
+          <div class="polaroid-face">
+            <div class="tape"></div>
+            <div class="polaroid-photo" style="background:url('Supp.jpg') center/cover;"></div>
+            <div class="polaroid-cap">Last</div>
+          </div>
+          <div class="polaroid-face polaroid-back"><p>IDK...&hellip;</p></div>
+        </div>
+      </div>
+      <div class="eyebrow">Foto terakhir</div>
+      <h2>Huft</h2>
+      <p class="body-text">Foto terbagus yang aku punya.</p>
+    </div>
+  </div>
+
+  <div class="slide" data-idx="5">
+    <div class="drift">
+      <div class="eyebrow">and there's so much more still to come&hellip;</div>
+      <h2 style="font-style:italic;">I could fill a hundred more of these with you.</h2>
+      <p class="body-text" style="font-family:'Caveat', cursive; font-size:1.5rem; color:var(--gold); margin-top:1.5rem;">yours, always</p>
+    </div>
+  </div>
+
+  <button class="nav-arrow nav-prev" onclick="go(current-1)">&#8592;</button>
+  <button class="nav-arrow nav-next" onclick="go(current+1)">&#8594;</button>
+
+  <div class="dots"></div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsWrap = document.querySelector('.dots');
+  let current = 0;
+  let timer;
+
+  slides.forEach((_, i)=>{
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0 ? ' active' : '');
+    d.onclick = ()=>go(i);
+    dotsWrap.appendChild(d);
+  });
+  const dots = document.querySelectorAll('.dot');
+
+  function go(i){
+    current = (i + slides.length) % slides.length;
+    slides.forEach(s=>s.classList.remove('active'));
+    dots.forEach(d=>d.classList.remove('active'));
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    resetTimer();
+  }
+
+  function resetTimer(){
+    clearInterval(timer);
+    timer = setInterval(()=>go(current+1), 6000);
+  }
+  resetTimer();
+</script>
+
+</body>
+</html>
